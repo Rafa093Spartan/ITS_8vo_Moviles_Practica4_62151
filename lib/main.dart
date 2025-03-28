@@ -284,7 +284,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool _isLoading = false;
   bool _rememberMe = false;
 
   // Función para registrar al usuario
@@ -299,7 +298,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
 
     try {
       // Llamada al mé
@@ -313,7 +311,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SnackBar(content: Text('Error en registro: $e')),
       );
     } finally {
-      setState(() => _isLoading = false);
     }
   }
 
