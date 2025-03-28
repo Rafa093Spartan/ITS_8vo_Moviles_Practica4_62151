@@ -83,33 +83,58 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Iniciar sesión')),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          // Distribuye los widgets: el primero arriba, el último abajo y el botón en el centro
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Campo de contraseña (se mostrará en la parte superior)
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Contraseña'),
-              obscureText: true,
-            ),
-            // Botón en el centro
-            _isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-              onPressed: _login,
-              child: const Text('Iniciar sesión'),
-            ),
-            // Campo de correo (se mostrará en la parte inferior)
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Correo'),
-              keyboardType: TextInputType.emailAddress,
-            ),
-          ],
+      // Eliminamos el AppBar para un diseño a pantalla completa
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        // Mismo fondo degradado que en register
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFE0ECFF),
+              Color(0xFFD2E3F3),
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            // Distribuye los widgets: el primero arriba, el último abajo y el botón en el centro
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Campo de contraseña (se mostrará en la parte superior)
+              TextField(
+                controller: _passwordController,
+                decoration: const InputDecoration(labelText: 'Contraseña'),
+                obscureText: true,
+              ),
+              // Botón en el centro
+              _isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                onPressed: _login,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 24,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: const Text('Iniciar sesión'),
+              ),
+              // Campo de correo (se mostrará en la parte inferior)
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(labelText: 'Correo'),
+                keyboardType: TextInputType.emailAddress,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -284,8 +309,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool _rememberMe = false;
-
   // Función para registrar al usuario
   void _register() async {
     final email = _emailController.text.trim();
@@ -334,22 +357,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         child: Stack(
           children: [
-            // Esquina superior izquierda: "Guardar" (checkbox + texto)
-            Positioned(
-              top: 16,
-              left: 16,
-              child: Row(
-                children: [
-                  Checkbox(
-                    value: _rememberMe,
-                    onChanged: (value) {
-                      setState(() => _rememberMe = value ?? false);
-                    },
-                  ),
-                  const Text("Guardar"),
-                ],
-              ),
-            ),
             // Esquina superior derecha: Botón "Registrarme"
             Positioned(
               top: 16,
@@ -398,6 +405,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+
 
   // Campo de texto con estilo redondeado
   Widget _buildRoundedTextField({
