@@ -310,6 +310,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   // Función para registrar al usuario
+  // Función para registrar al usuario
   void _register() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
@@ -321,21 +322,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
+    // Validación: contraseña debe tener al menos 8 caracteres
+    if (password.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('La contraseña debe tener mínimo 8 caracteres')),
+      );
+      return;
+    }
 
     try {
-      // Llamada al mé
+      // Llamada al método de registro; se asume que el método devuelve un token o un valor similar
       final token = await ApiService.register(email, password);
       if (token != null) {
-        // Si el backend retorna el token, podemos navegar al login
+        // Si el backend retorna el token, navegamos a la pantalla de login
         Navigator.pushReplacementNamed(context, '/login');
+      } else {
+        throw 'Error al registrar el usuario';
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error en registro: $e')),
       );
-    } finally {
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
