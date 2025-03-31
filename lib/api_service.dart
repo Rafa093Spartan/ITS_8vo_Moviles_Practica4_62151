@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';  // Asegúrate de importar SharedPreferences
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   static final String _apiUrl = dotenv.get('API_URL');

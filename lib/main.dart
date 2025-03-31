@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'api_service.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env"); // Cargar variables de entorno
@@ -43,6 +41,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
+  // Función para validar el formato del correo
+  bool _isValidEmail(String email) {
+    final regex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return regex.hasMatch(email);
+  }
+
   void _login() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
@@ -50,6 +54,14 @@ class _LoginScreenState extends State<LoginScreen> {
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor ingresa correo y contraseña')),
+      );
+      return;
+    }
+
+    // Validación del formato de correo
+    if (!_isValidEmail(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ingresa un correo válido')),
       );
       return;
     }
@@ -133,14 +145,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: const InputDecoration(labelText: 'Correo'),
                 keyboardType: TextInputType.emailAddress,
               ),
+              // Botón para ir a la pantalla de registro
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/register');
+                },
+                child: const Text('¿No tienes cuenta? Regístrate'),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
 }
+
 //app original
 
 class MyHomePage extends StatefulWidget {
@@ -309,7 +328,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // Función para registrar al usuario
+  // Función para validar el formato del correo
+  bool _isValidEmail(String email) {
+    final regex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return regex.hasMatch(email);
+  }
+
   // Función para registrar al usuario
   void _register() async {
     final email = _emailController.text.trim();
@@ -318,6 +342,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor completa todos los campos')),
+      );
+      return;
+    }
+
+    // Validación: correo debe tener un formato válido
+    if (!_isValidEmail(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ingresa un correo válido')),
       );
       return;
     }
@@ -345,7 +377,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -407,6 +438,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hint: "Ingresa tu contraseña",
                     obscure: true,
                   ),
+                  // Botón para ir a la pantalla de login
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                    child: const Text('¿Ya tienes cuenta? Inicia sesión'),
+                  ),
                 ],
               ),
             ),
@@ -415,7 +453,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
-
 
   // Campo de texto con estilo redondeado
   Widget _buildRoundedTextField({
